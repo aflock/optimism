@@ -78,7 +78,7 @@ func createOutput(
 		return nil, bindings.TypesOutputRootProof{}, nil, err
 	}
 
-	// find the output index that the withdrawal was commited to in
+	// find the output index that the withdrawal was committed to in
 	l2OutputIndex, err := oracle.GetL2OutputIndexAfter(&bind.CallOpts{}, blockNumber)
 	if err != nil {
 		return nil, bindings.TypesOutputRootProof{}, nil, err
@@ -323,7 +323,7 @@ func main() {
 				Withdrawal *crossdomain.Withdrawal       `json:"withdrawal"`
 				Legacy     *crossdomain.LegacyWithdrawal `json:"legacy"`
 				Trace      callFrame                     `json:"trace"`
-				Index      int                           `json"index"`
+				Index      int                           `json:"index"`
 			}
 
 			badWithdrawals := make([]badWithdrawal, 0)
