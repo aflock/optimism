@@ -134,7 +134,7 @@ func createOutput(
 
 	// ensure that the locally computed hash matches
 	if l2Output.OutputRoot != localOutputRootHash {
-		return nil, bindings.TypesOutputRootProof{}, nil, fmt.Errorf("mismatch in output root hashes", "got", localOutputRootHash, "expect", l2Output.OutputRoot)
+		return nil, bindings.TypesOutputRootProof{}, nil, fmt.Errorf("mismatch in output root hashes, got 0x%x expected 0x%x", localOutputRootHash, l2Output.OutputRoot)
 	}
 	log.Info(
 		"output root proof",
