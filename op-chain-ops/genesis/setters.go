@@ -70,7 +70,7 @@ func setProxies(db vm.StateDB, proxyAdminAddr common.Address, namespace *big.Int
 		bigAddr := new(big.Int).Or(namespace, new(big.Int).SetUint64(i))
 		addr := common.BigToAddress(bigAddr)
 
-		if UntouchablePredeploys[addr] || addr == predeploys.ProxyAdminAddr {
+		if UntouchablePredeploys[addr] {
 			log.Info("Skipping setting proxy", "address", addr)
 			continue
 		}
@@ -83,6 +83,7 @@ func setProxies(db vm.StateDB, proxyAdminAddr common.Address, namespace *big.Int
 		db.SetState(addr, AdminSlot, proxyAdminAddr.Hash())
 		log.Trace("Set proxy", "address", addr, "admin", proxyAdminAddr)
 	}
+
 	return nil
 }
 
@@ -118,18 +119,11 @@ func SetImplementations(db vm.StateDB, storage state.StorageConfig, immutable im
 			return fmt.Errorf("error converting to code namespace: %w", err)
 		}
 
-		// Proxy admin is a special case - it needs an impl set, but at its own address
-		if *address == predeploys.ProxyAdminAddr {
-			codeAddr = *address
-		}
-
 		if !db.Exist(codeAddr) {
 			db.CreateAccount(codeAddr)
 		}
 
-		if *address != predeploys.ProxyAdminAddr {
-			db.SetState(*address, ImplementationSlot, codeAddr.Hash())
-		}
+		db.SetState(*address, ImplementationSlot, codeAddr.Hash())
 
 		if err := setupPredeploy(db, deployResults, storage, name, *address, codeAddr); err != nil {
 			return err
@@ -140,6 +134,7 @@ func SetImplementations(db vm.StateDB, storage state.StorageConfig, immutable im
 			return fmt.Errorf("code not set for %s", name)
 		}
 	}
+
 	return nil
 }
 
